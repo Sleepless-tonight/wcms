@@ -14,13 +14,13 @@ public interface Subject {
      * @param name
      * @return
      */
-    public String SayHello(String name);
+    String SayHello(String name);
 
     /**
      * 再见
      *
      * @return
      */
-    public String SayGoodBye();
+    String SayGoodBye();
 
 }
