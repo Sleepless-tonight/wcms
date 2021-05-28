@@ -1,4 +1,4 @@
-package com.nostyling.wcms.test.DynamicProxy;
+package com.nostyling.wcms.test.DynamicProxy.test1;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package com.nostyling.wcms.test.DynamicProxy;
+package com.nostyling.wcms.test.DynamicProxy.test1;
 
 /**
  * @author shiliang
