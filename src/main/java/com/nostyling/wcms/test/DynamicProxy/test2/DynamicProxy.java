@@ -8,7 +8,7 @@ import java.lang.reflect.Proxy;
  * @author shiliang
  * @Classname DynamicProxy
  * @Date 2021/5/27 17:30
- * @Description TODO
+ * @Description 只有接口的代理
  */
 public class DynamicProxy {
     public static void main(String[] args) {

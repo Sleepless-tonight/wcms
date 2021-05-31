@@ -11,26 +11,41 @@ import java.lang.reflect.Proxy;
  * @Description 调用处理器实现类
  * * 每次生成动态代理类对象时都需要指定一个实现了该接口的调用处理器对象
  */
-public class InvocationHandlerImpl implements InvocationHandler {
+public class InvocationHandlerImpl<T> implements InvocationHandler {
 
     /**
      * 这个就是我们要代理的真实对象
      */
-    private Object subject;
+    private T subject;
+
     /**
      * 获取被代理接口实例对象
-     * @param <T>
+     *
+     * @param
      * @return
      */
-    public <T> T getProxy() {
+    public T getProxy() {
         return (T) Proxy.newProxyInstance(subject.getClass().getClassLoader(), subject.getClass().getInterfaces(), this);
     }
+
+    /**
+     * 获取被代理接口实例对象
+     *
+     * @param subject
+     * @return
+     */
+    public static <F, E> F getProxy(Class<F> fClass, E subject) {
+        InvocationHandlerImpl<E> invocationHandler = new InvocationHandlerImpl<E>(subject);
+
+        return (F) Proxy.newProxyInstance(invocationHandler.subject.getClass().getClassLoader(), invocationHandler.subject.getClass().getInterfaces(), invocationHandler);
+    }
+
     /**
      * 构造方法，给我们要代理的真实对象赋初值
      *
      * @param subject
      */
-    public InvocationHandlerImpl(Object subject) {
+    public InvocationHandlerImpl(T subject) {
         this.subject = subject;
     }
 

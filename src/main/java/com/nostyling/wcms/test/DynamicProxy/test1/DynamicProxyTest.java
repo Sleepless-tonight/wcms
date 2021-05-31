@@ -9,8 +9,12 @@ package com.nostyling.wcms.test.DynamicProxy.test1;
 public class DynamicProxyTest {
     public static void main(String[] args) {
         // jdk动态代理测试
-        Subject proxy = new InvocationHandlerImpl(new RealSubject()).getProxy();
+        // InvocationHandlerImpl<Subject> invocationHandler = new InvocationHandlerImpl<Subject>(new RealSubject());
+        // Subject proxy = invocationHandler.getProxy();
+        // proxy.SayGoodBye();
+        Subject proxy = InvocationHandlerImpl.getProxy(Subject.class, new RealSubject());
         proxy.SayGoodBye();
+        proxy.SayHello("test1");
     }
 
 }
