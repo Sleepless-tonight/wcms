@@ -1,5 +1,6 @@
 package com.nostyling.wcms.utils.list;
 
+import com.nostyling.wcms.utils.object.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
  * @author shiliang
  * @Classname Test
  * @Date 2021/1/21 20:06
- * @Description TODO
+ * @Description 任意对象以任意属性进行任意排序
  */
 public class ListUtils {
     // private static final Pattern pattern = Pattern.compile("-?[0-9]+\\.?[0-9]+%?");
@@ -23,13 +24,13 @@ public class ListUtils {
      * 给list的每个属性都指定是升序还是降序
      *
      * @param list 要排序的集合
-     * @param sortnameArr 参数数组
+     * @param sortNameArr order by 的属性
      * @param typeArr     每个属性对应的升降序数组， true升序，false降序
      * @param sort        自定义排序的顺序
      *
      */
-    public static <E> void sort(List<E> list, final String[] sortnameArr, final boolean[] typeArr, final String[] sort) {
-        if (sortnameArr.length != typeArr.length) {
+    public static <E> void sort(List<E> list, final String[] sortNameArr, final boolean[] typeArr, final String[] sort) {
+        if (sortNameArr.length != typeArr.length) {
             throw new RuntimeException("属性数组元素个数和升降序数组元素个数不相等");
         }
         Collections.sort(list, new Comparator<E>() {
@@ -37,8 +38,8 @@ public class ListUtils {
             public int compare(E a, E b) {
                 int ret = 0;
                 try {
-                    for (int i = 0; i < sortnameArr.length; i++) {
-                        ret = ListUtils.compareObject(sortnameArr[i], typeArr[i], a, b, i < sort.length ? sort[i] : null);
+                    for (int i = 0; i < sortNameArr.length; i++) {
+                        ret = ListUtils.compareObject(sortNameArr[i], typeArr[i], a, b, i < sort.length ? sort[i] : null);
                         if (0 != ret) {
                             break;
                         }
@@ -54,7 +55,7 @@ public class ListUtils {
     /**
      * 对2个对象按照指定属性名称进行排序
      *
-     * @param sortname 属性名称
+     * @param sortName 属性名称
      * @param isAsc    true升序，false降序
      * @param sort    自定义排序的顺序
      * @param a
@@ -62,10 +63,10 @@ public class ListUtils {
      * @return
      * @throws Exception
      */
-    private static <E> int compareObject(final String sortname, final boolean isAsc, E a, E b, final String sort) throws Exception {
+    private static <E> int compareObject(final String sortName, final boolean isAsc, E a, E b, final String sort) throws Exception {
         int ret;
-        Object value1 = ListUtils.forceGetFieldValue(a, sortname);
-        Object value2 = ListUtils.forceGetFieldValue(b, sortname);
+        Object value1 = ObjectUtils.forceGetFieldValue(a, sortName);
+        Object value2 = ObjectUtils.forceGetFieldValue(b, sortName);
         if (null == value1 && null == value2) {
             return 0;
         } else if (null == value1) {
@@ -193,29 +194,7 @@ public class ListUtils {
         return nf.format(numObj);
     }
 
-    /**
-     * 获取指定对象的指定属性值（去除private,protected的限制）
-     *
-     * @param obj       属性名称所在的对象
-     * @param fieldName 属性名称
-     * @return
-     * @throws Exception
-     */
-    public static Object forceGetFieldValue(Object obj, String fieldName) throws Exception {
-        Field field = obj.getClass().getDeclaredField(fieldName);
-        Object object = null;
-        boolean accessible = field.isAccessible();
-        if (!accessible) {
-            // 如果是private,protected修饰的属性，需要修改为可以访问的
-            field.setAccessible(true);
-            object = field.get(obj);
-            // 还原private,protected属性的访问性质
-            field.setAccessible(accessible);
-            return object;
-        }
-        object = field.get(obj);
-        return object;
-    }
+
 
     public static void main(String[] args) {
         List<com.example.testall.Test.Test1> test1s = Arrays.asList(new com.example.testall.Test.Test1[]{
